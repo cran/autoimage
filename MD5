@@ -1,7 +1,11 @@
-c05f3a5fef8247252efcab2430edef5d *DESCRIPTION
-73190b48c19fb31d1a2a6a8668f39db5 *NAMESPACE
-325b1e8a86b13fa06866df4b993d4aa9 *R/autoimage.R
-b2cb2a7998ac996f16c10e43a88faa2f *R/legend.scale.R
+e0026ad6578f6605c0d6f40203788999 *DESCRIPTION
+7be280b2d53a59645dc1cdf5b2a51e12 *NAMESPACE
+70875c1a58d429fb60ef9fa964ca7634 *R/autoimage.R
+58c17efcda2dfb015705eb4797cd857f *R/factor.image.R
+acf9fb62af8f9f55fadaec2c4919be1d *R/legend.scale.R
+f9ede89c0a702bed564ccf1818fb4b36 *R/narccap.R
 2a78ec47b435708d6d8e569c7007d519 *R/preamble.R
-363fc9e59398bdd8e27983e7226cb6c5 *man/autoimage.Rd
-9d957c34e9b8dc4fb4fbff3c1e2841e6 *man/legend.scale.Rd
+8b21f03fd273b292c7b1c03c18e2d134 *data/narccap.rda
+42d851e0b24e0ce8778d28d331232731 *man/autoimage.Rd
+4c9508bedae9db967e6a9f6289ae10cb *man/legend.scale.Rd
+65ee932b1944d5ac55a41e020d3cfbb3 *man/narccap.Rd

@@ -1,4 +1,4 @@
-#' Plot an legend scale.
+#' Create an image plot for a factor variable.
 #'
 #' \code{legend.scale} plots a color gradient with an associated quantitive scale.  This is used to add the legend scale in the \code{\link{autoimage}} function.
 #'
@@ -70,5 +70,6 @@ legend.scale <- function(zlim, col = heat.colors(12), horizontal = TRUE, breaks,
 
   image(x, y, z, xaxt = "n", yaxt = "n", xlab = "",
         ylab = "", col = col, breaks = breaks)
+  box()
   do.call("axis", axis.args)
 }
