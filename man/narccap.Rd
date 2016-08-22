@@ -6,7 +6,7 @@
 \alias{lon}
 \alias{narccap}
 \alias{tasmax}
-\title{Maximum daily surface air temperatures on a 140\eqn{\times}115 grid.}
+\title{Maximum daily surface air temperatures on a grid.}
 \format{Contains:
 \describe{
  \item{lon}{A 140\eqn{\times}115 matrix of longitude coordinates.}

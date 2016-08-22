@@ -1,6 +1,6 @@
 #' @name narccap
 #' @aliases lon lat tasmax
-#' @title Maximum daily surface air temperatures on a 140\eqn{\times}115 grid.
+#' @title Maximum daily surface air temperatures on a grid.
 #' @description These data are taken from the North American Regional Climate Change Assessment Program (NARCCAP).  Specifically, it is five consecutive days of maximum daily surface air temperature (K) (abbreviated tasmax) output from the Canadian Regional Climate Model forced by the Community Climate System Model.  
 #' @docType data
 #' @usage data(narccap)
