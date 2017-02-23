@@ -1,6 +1,6 @@
-a6c7bb5b2f230651da4fc706b1e7a03f *DESCRIPTION
+95a3baadf82d5e1d2755ee3a17eb4655 *DESCRIPTION
 7a045242f636d522ac053c287bf9e905 *NAMESPACE
-8b0bf89b1027c767207b28fad8fe3a40 *NEWS
+d25bfe5edda8f7614d34bb11233052d7 *NEWS
 fd687dd6c6274946b3efa538ecdf0419 *R/autoimage.R
 6e7851e723e879c57b676c6a02bd01ef *R/autoimage.match.old.args.R
 0e7eb8a4bf322043ba5b83c5b079ea79 *R/autoimage.xyz.setup.R
@@ -14,7 +14,7 @@ e7998abcc540733a185001d267746455 *R/copoly.R
 3d091e3810122accb98e1a796203eda7 *R/ggautoimage.R
 0127bb2dfd2c8ce7a1fe99b1cc0f5545 *R/ggautoimage.xyz.setup.R
 88a5aea0337721743c0e7a38d27de40b *R/legend.scale.R
-f8379805634553798850127f58396dec *R/narccap.R
+294180a3eb199b34d6fdca412e1ad8ec *R/narccap.R
 7599a46cad2097eb22f6edf573363061 *R/parrows.R
 e428aef375580863c6b0d67742d2277d *R/paxes.R
 a2209cd920addda32a7a68c5481b945e *R/pimage.R
@@ -33,8 +33,8 @@ ede7fd62c6bd8353a7e8b5fea16ab398 *build/vignette.rds
 ba05caf92a24ad28326cf9f779350037 *data/copoly.rda
 8b21f03fd273b292c7b1c03c18e2d134 *data/narccap.rda
 b53c0068146df6938251d98db4389b6c *inst/doc/vignette.R
-2869bdcf5ed5fd697a9f50b3dc0df1dc *inst/doc/vignette.Rmd
-7ffaebe2695e8bbac68d696251922c47 *inst/doc/vignette.html
+3ee15c1fe184273626863f281e4d881c *inst/doc/vignette.Rmd
+00b60d1cb6f19990590aa6d0d3bca9bd *inst/doc/vignette.html
 f4a916de4b99b91fa1a3bcd81fdc188d *man/autoimage.Rd
 efbffa5ce8a7a42c952a165edc9f0c75 *man/autolayout.Rd
 67fe17a6444e25a4ccabdd0438a5dca6 *man/autolegend.Rd
@@ -44,7 +44,7 @@ e4fe9dc0691cdd1f1e1521531dbe1adc *man/blank.plot.Rd
 7cb1d33b2ad66aa73f59813a880344f6 *man/copoly.Rd
 cb68a5009e45496185bd8260941f3953 *man/ggautoimage.Rd
 0f3077e41a851bd03e232f54e55ec12a *man/legend.scale.Rd
-5c3d666a52259297860e01aa3203d5a4 *man/narccap.Rd
+ac9fe0433e45cfff19b0cb98549a1355 *man/narccap.Rd
 e735325f1e6067bf86880384bdae55b7 *man/parrows.Rd
 158733d0b65fe2e7565062c68111cb73 *man/paxes.Rd
 8112cc9058898717b0e020ede912c12d *man/pimage.Rd
@@ -76,4 +76,4 @@ ba3e34ae81d5e146c1a3dcc4bd3a48a4 *tests/testthat/test-ppolygon.R
 1e3cc8166c7d96ebeae99d6ef2206e06 *tests/testthat/test-psegments.R
 9a2117c6592328e99317f9d6a9d35d96 *tests/testthat/test-ptext.R
 6cd006de55d5044fb1c5f9263cffc9bd *tests/testthat/test-rotate.R
-2869bdcf5ed5fd697a9f50b3dc0df1dc *vignettes/vignette.Rmd
+3ee15c1fe184273626863f281e4d881c *vignettes/vignette.Rmd
