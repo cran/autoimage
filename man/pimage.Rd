@@ -103,16 +103,25 @@ argument through \code{...}.  In that case, \code{lines} should be
 a list with components \code{x} and \code{y} specifying the
 locations to draw the lines.  The appearance of the plotted lines
 can be customized by passing a named list called \code{lines.args}
-through \code{...}. The elements of \code{lines.args} should match
-the elements of \code{\link[graphics]{lines}}.  See Examples.
+through \code{...}. The components of \code{lines.args} should match
+the arguments of \code{\link[graphics]{lines}}.  See Examples.
 
 Points can be added to each image by passing the \code{points} 
 argument through \code{...}.  In that case, \code{points} should be
 a list with components \code{x} and \code{y} specifying the
 locations to draw the points.  The appearance of the plotted points
 can be customized by passing a named list called \code{points.args}
-through \code{...}. The elements of \code{points.args} should match
-the elements of \code{\link[graphics]{points}}.  See Examples.
+through \code{...}. The components of \code{points.args} should match
+the components of \code{\link[graphics]{points}}.  See Examples.
+
+Text can be added to each image by passing the \code{text} 
+argument through \code{...}.  In that case, \code{text} should be
+a list with components \code{x} and \code{y} specifying the
+locations to draw the text, and \code{labels}, a component
+specifying the actual text to write.  The appearance of the plotted text
+can be customized by passing a named list called \code{text.args}
+through \code{...}. The components of \code{text.args} should match
+the components of \code{\link[graphics]{text}}.  See Examples.
 
 The legend scale can be modified by passing \code{legend.axis.args}
 through \code{...}.  The argument should be a named list 
@@ -127,12 +136,21 @@ be specified (instead of \code{at}) to specify the location of the
 x and y ticks.  If \code{xat} or \code{yat} are specified, then
 this overrides the \code{xaxt} and \code{yaxt} arguments,
 respectively.  See the \code{\link[autoimage]{paxes}} function to
-see how \code{axis.args can be used.}
+see how \code{axis.args} can be used.
 
 The legend margin can be customized by passing \code{legend.mar} to
 \code{pimage} through \code{...}.  This should be a numeric vector
 indicating the margins of the legend, identical to how 
 \code{par("mar")} is specified.
+
+The various options of the labeling, axes, and legend are largely
+independent.  e.g., passing \code{col.axis} through \code{...} 
+will not affect the axis unless it is passed as part of the 
+named list \code{axis.args}.  However, one can set the various
+\code{par} options prior to plotting to simultaneously
+affect the appearance of multiple aspects of the plot.  See 
+Examples.  After plotting, \code{reset.par()} can be used to reset 
+the graphics device options to their default values.
 }
 \examples{
 # image plot for data on an irregular grid
@@ -150,7 +168,8 @@ data(co, package = "gear")
 pimage(co$longitude, co$latitude, co$Al)
 
 # show observed locations on image,
-# along with Colorado border
+# along with Colorado border, locations of Denver and Colorado 
+# Springs
 data(copoly)
 copoints <- list(x = co$lon, y = co$lat)
 pimage(co$longitude, co$latitude, co$Al, 
@@ -158,6 +177,9 @@ pimage(co$longitude, co$latitude, co$Al,
        lines.args = list(lwd = 2, col = "grey"),
        points = copoints, 
        points.args = list(pch = 21, bg = "white"),
+       text = list(x = c(-104.98, -104.80), y = c(39.74, 38.85), 
+                   labels = c("Denver", "Colorado Springs")), 
+       text.args = list(col = "purple"),
        xlim = c(-109.1, -102),
        ylim = c(36.8, 41.1))
 
@@ -198,9 +220,17 @@ pimage(lon, lat, tasmax[,,1],
        ylab = "latitude",
        main = "temperature (K)")
 reset.par() # reset graphics device
+
+# change many aspects of plot appearance using par
+par(cex.axis = 0.5, cex.lab = 0.5, mgp = c(1.5, 0.5, 0),
+    mar = c(2.1, 2.1, 4.1, 0.2), col.axis = "orange",
+    col.main = "blue", family = "mono")
+pimage(lon, lat, tasmax[,,1])
+title("very customized plot")
+reset.par()
+
 }
 \seealso{
 \code{\link[graphics]{image}}, 
   \code{\link[fields]{image.plot}}, \code{\link[graphics]{axis}}
 }
-

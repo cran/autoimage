@@ -27,8 +27,23 @@ if (test) {
   reset.par()
   data(co, package = "gear")
   autoimage(co$lon, co$lat, co[, c("Al", "Ca")], common.legend = FALSE, 
-    map = "county", main = c("Aluminum", "Cadmium"), points = list(x = co$lon, 
-      y = co$lat), points.args = list(pch = 20, col = "white"), outer.title = "co with points titles")
+    map = "county", main = c("Aluminum", "Cadmium"), 
+    points = list(x = co$lon, y = co$lat), 
+    points.args = list(pch = 20, col = "white"), 
+    outer.title = "co with points titles")
+  
+  # plot irregularly-spaced responsed as images with separate legends and
+  # county borders.  Add observed data locations with custom point
+  # options, and text
+  reset.par()
+  data(co, package = "gear")
+  autoimage(co$lon, co$lat, co[, c("Al", "Ca")], common.legend = FALSE, 
+            map = "county", main = c("Aluminum", "Cadmium"), 
+            points = list(x = co$lon, y = co$lat), 
+            points.args = list(pch = ".", col = "white"), 
+            text = list(x = co$lon, y = co$lat),
+            text.args = list(col = "orange"),
+            outer.title = "co with points, orange text titles")
   
   # customize margins and lratio for large plot also use projection
   # specify manual lines (though in this case it is the same as using map
