@@ -72,4 +72,3 @@ if (test) {
   reset.par()
   dev.off()
 }
-TRUE
