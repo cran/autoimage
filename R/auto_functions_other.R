@@ -340,6 +340,7 @@ autolegend <- function() {
 #' Creates hidden information for the legend margin and legend scale
 #' to using autolegend function.
 #' @export
+#' @keywords internal
 ".legend.scale.args" <- local({
   val <- list(zlim = NULL, col = NULL, breaks = NULL, axis.args = NULL)
   function(new) if (!missing(new)) 
@@ -347,12 +348,14 @@ autolegend <- function() {
 })
 
 #' @export
+#' @keywords internal
 ".legend.mar" <- local({
   val <- c(5.1, 0, 4.1, 0)
   function(new) if (!missing(new)) 
     val <<- new else val
 })
 
+#' @keywords internal
 #' @export
 ".legend.horizontal" <- local({
   val <- TRUE

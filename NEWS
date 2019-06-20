@@ -23,3 +23,5 @@
         to adapt to number of images being plotted.
         
 # 2.0 - Use MBA::mba.surf for grid interpolation instead of akima::interp because of rescrictive licensing.  Update behavior of lratio to adapt based on the number of images being plotted.  Add inarccap data.
+
+# 2.0.1 Fix small bug related to us.cities in ggplot2-comparison vignette.

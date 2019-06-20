@@ -1,7 +1,7 @@
-77b5e1b8b49944c04f96cf4f4a16d4f7 *DESCRIPTION
+800ef7f4fd656d41c919212641e0fb3b *DESCRIPTION
 162e4eb3e6cdaad17425eb3dd57890a2 *NAMESPACE
-6fbaecdddefde61be380b74c2de41134 *NEWS
-f38a765a0b956b5a1d6cb6ac6b9f00a8 *R/auto_functions_other.R
+e04e64e81cdfeb15495b4685bec3ac53 *NEWS
+e5af4e1c8887427a8881c8bb7682ec60 *R/auto_functions_other.R
 6b6d89754baa1b51b24dc35ed866e2b4 *R/autoimage.R
 f438706fc58dae3b4792a91a9397bdd0 *R/blank.plot.R
 e7ae8f6def43d64bb532e122976ed3d7 *R/capoly.R
@@ -22,7 +22,7 @@ e35127b831ad56dacdf252050becab17 *R/ptext.R
 95248e3666940f8ce73cf3d904135712 *R/reset.par.R
 21ed4d0a34eae01c5503ef5e13c0ecd3 *R/rotate.R
 b7e0ed58094bf46c4fe3c55a82ed7ce9 *README.md
-4588674443b05a8d3f3a504295817735 *build/vignette.rds
+0674f4c859242ef67baaba18783f417b *build/vignette.rds
 b93a127adb064c154b6058f849b1d36b *data/canada.rda
 1e7e4dbb94f5bec19df8b21e91f95be1 *data/copoly.rda
 6d647ca85e6826cce5ace284f751db7e *data/inarccap.rda
@@ -30,10 +30,10 @@ b93a127adb064c154b6058f849b1d36b *data/canada.rda
 37f689d06ef757a531364e54e3446c5a *inst/CITATION
 c0360693518cc0fc6594909e58856b2c *inst/doc/autoimage.R
 3789422e497857a561fc6e853b2df3d5 *inst/doc/autoimage.Rmd
-dfeb275eb626d3d0bbfb7da02ec56c15 *inst/doc/autoimage.html
-2912e068ecc7806f0ff1575f7d0a7225 *inst/doc/ggplot2-comparison.R
-10671d6e68286b5c9d18fde9ab09ed90 *inst/doc/ggplot2-comparison.Rmd
-b807fd8c681e0fd05f50b6e68c8024c8 *inst/doc/ggplot2-comparison.html
+cc842874ea61b6edbdf586105d388dd6 *inst/doc/autoimage.html
+dd80c8fd689bb4e611518bbb4b650517 *inst/doc/ggplot2-comparison.R
+3b0cf04573ec2ed29e0d7ffb05e5c55b *inst/doc/ggplot2-comparison.Rmd
+6bbae8cce0f75c4de818f931bdb41876 *inst/doc/ggplot2-comparison.html
 c539375b930fd199ce27c0c4082c83a6 *man/autoimage.Rd
 39f8957584536a46f90381b2d6076b31 *man/autolayout.Rd
 010400694bf18e1624b10654f44f24b9 *man/autolegend.Rd
@@ -42,7 +42,8 @@ f5c9631861ef1f92433c3294ac7fb336 *man/autosize.Rd
 e895491e3577ed29075e0c04c4ca3928 *man/blank.plot.Rd
 d602b81afca859fb3a5f3d8b375262cf *man/canada.Rd
 eda341aee9e4a2a10d93cbe1257ae573 *man/copoly.Rd
-4b120e0283d4964b73d1b6572bfc2ba3 *man/ggautoimage.Rd
+8a8fa249b6a97b4c36bf14165208c96d *man/dot-legend.scale.args.Rd
+aaf2c223a96b6906e5bad77e949d6000 *man/ggautoimage.Rd
 ab8771033ee854f2a390c3303c7a5781 *man/inarccap.Rd
 ae53c7b870b7e8d0aa6a787ce6faa102 *man/legend.scale.Rd
 2515cf5c07b8846af9c31d6cae7ba907 *man/narccap.Rd
@@ -85,4 +86,4 @@ d56cce26d740825b68d9603caece2dad *tools/README/unnamed-chunk-4-1.png
 f3f769efc91d4493c414895f1d5bbd76 *tools/README/unnamed-chunk-4-2.png
 16c378145eb111f95296a764cf44eb69 *tools/README/unnamed-chunk-5-1.png
 3789422e497857a561fc6e853b2df3d5 *vignettes/autoimage.Rmd
-10671d6e68286b5c9d18fde9ab09ed90 *vignettes/ggplot2-comparison.Rmd
+3b0cf04573ec2ed29e0d7ffb05e5c55b *vignettes/ggplot2-comparison.Rmd
