@@ -1,55 +1,55 @@
-## ----setup, include=FALSE------------------------------------------------
+## ----setup, include=FALSE-----------------------------------------------------
 library(autoimage)
 
-## ---- fig.height=5, fig.width=4------------------------------------------
+## ---- fig.height=5, fig.width=4-----------------------------------------------
 data(narccap)
 pimage(x = lon, y = lat, z = tasmax[,,1])
 
-## ---- fig.height=5, fig.width=4------------------------------------------
+## ---- fig.height=5, fig.width=4-----------------------------------------------
 data(co, package = "gear")
 pimage(co$longitude, co$latitude, co$Al, 
        xlab = "lon", ylab = "lat")
 
-## ---- fig.height = 5, fig.width = 4--------------------------------------
+## ---- fig.height = 5, fig.width = 4-------------------------------------------
 pimage(lon, lat, tasmax[,,1], col = viridisLite::magma(6))
 
-## ---- fig.height=4, fig.width=5------------------------------------------
+## ---- fig.height=4, fig.width=5-----------------------------------------------
 pimage(x = lon, y = lat, z = tasmax[,,1], legend = "vertical")
 
-## ---- fig.height=5, fig.width=4------------------------------------------
+## ---- fig.height=5, fig.width=4-----------------------------------------------
 pimage(x = lon, y = lat, z = tasmax[,,1], proj = "bonne", 
        parameters = 45)
 
-## ---- fig.height=5, fig.width=4------------------------------------------
+## ---- fig.height=5, fig.width=4-----------------------------------------------
 pimage(x = lon, y = lat, z = tasmax[,,1], proj = "bonne", 
        parameters = 45, map = "world")
 
-## ---- fig.height=5, fig.width=7------------------------------------------
+## ---- fig.height=5, fig.width=7-----------------------------------------------
 autoimage(lon, lat, tasmax)
 
-## ---- fig.height=5, fig.width=4------------------------------------------
+## ---- fig.height=5, fig.width=4-----------------------------------------------
 autoimage(co$longitude, co$latitude, co[,c("Al", "Ca", "Fe", "K")],
            main = c("(a) Aluminum %", "(b) Calcium %", 
                     "(c) Iron %", "(d) Potassium %"),
           xlab = "lon", ylab = "lat")
 
-## ---- fig.height=5, fig.width=4------------------------------------------
+## ---- fig.height=5, fig.width=4-----------------------------------------------
 autoimage(co$longitude, co$latitude, co[,c("Al", "Ca", "Fe", "K")],
           common.legend = FALSE,
           main = c("(a) Aluminum %", "(b) Calcium %", 
                    "(c) Iron %", "(d) Potassium %"),
           xlab = "lon", ylab = "lat")
 
-## ---- fig.height=3, fig.width=7------------------------------------------
+## ---- fig.height=3, fig.width=7-----------------------------------------------
 autoimage(lon, lat, tasmax[,,1:3], size = c(1, 3))
 
-## ---- fig.height = 6, fig.width = 7--------------------------------------
+## ---- fig.height = 6, fig.width = 7-------------------------------------------
 autoimage(lon, lat, tasmax, outer.title = "tasmax for 5 days")
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 autolayout(c(2, 3), legend = "v")
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 # load world map
 data(worldMapEnv, package = "maps")
 # extract hawaii and alaskan borders
@@ -63,7 +63,7 @@ codf <- us.cities[us.cities$country.etc == "CO", ]
 # extract capitals from us.cities
 capdf <- us.cities[us.cities$capital == 2,]
 
-## ---- fig.width=7, fig.height=5, hold=TRUE-------------------------------
+## ---- fig.width=7, fig.height=5, hold=TRUE------------------------------------
 # setup plotting area
 autolayout(c(1, 2), legend = "h", common.legend = FALSE, outer = TRUE)
 # create image of NARCCAP data.
@@ -104,20 +104,20 @@ autolegend()
 # add common title for plots
 mtext("Two complicated maps", col = "purple", outer = TRUE, cex = 2)
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 data(stateMapEnv, package = "maps")
 statepoly <- maps::map("state", plot = FALSE)
 citylist <- list(x = us.cities$long, y = us.cities$lat)
 
-## ---- fig.height = 5, fig.width = 4--------------------------------------
+## ---- fig.height = 5, fig.width = 4-------------------------------------------
 pimage(lon, lat, tasmax[,,1], lines = statepoly, points = citylist)
 
-## ---- fig.height = 5, fig.width = 4--------------------------------------
+## ---- fig.height = 5, fig.width = 4-------------------------------------------
 pimage(lon, lat, tasmax[,,1], lines = statepoly, points = citylist, 
        lines.args = list(lwd = 2, lty = 3, col = "white"),
        points.args = list(pch = 20, col = "blue"))
 
-## ---- fig.height=4, fig.width=7------------------------------------------
+## ---- fig.height=4, fig.width=7-----------------------------------------------
 citypoints = list(x = c(-104.98, -104.80), y = c(39.74, 38.85),
                   labels = c("Denver", "Colorado Springs"))
 autoimage(co$lon, co$lat, co[,c("Al", "Ca")], common.legend = FALSE, 
@@ -128,10 +128,10 @@ autoimage(co$lon, co$lat, co[,c("Al", "Ca")], common.legend = FALSE,
           text.args = list(pos = 3, col = "white"),
           xlab = "lon", ylab = "lat")
 
-## ---- fig.height = 4, fig.width = 5--------------------------------------
+## ---- fig.height = 4, fig.width = 5-------------------------------------------
 pimage(lon, lat, tasmax[,,1], proj = "bonne", parameters = 40)
 
-## ---- fig.height = 4, fig.width = 5--------------------------------------
+## ---- fig.height = 4, fig.width = 5-------------------------------------------
 pimage(lon, lat, tasmax[,,1], proj = "bonne", parameters = 40,
        axis.args = list(yat = seq(0, 70, by = 10), 
                         xat = seq(-220, 20, by = 20),
@@ -140,20 +140,20 @@ pimage(lon, lat, tasmax[,,1], proj = "bonne", parameters = 40,
        legend.axis.args = list(cex.axis = 0.9),
        lratio = 0.3)
 
-## ---- fig.height = 5, fig.width = 4--------------------------------------
+## ---- fig.height = 5, fig.width = 4-------------------------------------------
 pimage(lon, lat, tasmax[,,1], col = viridisLite::magma(6), 
        breaks = c(0, 275, 285, 295, 305, 315, 325),
        legend.axis.args = list(col.axis = "blue", las = 2, cex.axis = 0.75))
 
-## ---- fig.height = 5, fig.width = 4.5------------------------------------
+## ---- fig.height = 5, fig.width = 4.5-----------------------------------------
 pimage(co$lon, co$lat, co$Al, interp.args = list(no.X = 100, no.Y = 100), 
        xlab = "lon", ylab = "lat")
 
-## ---- fig.height = 5, fig.width = 6--------------------------------------
+## ---- fig.height = 5, fig.width = 6-------------------------------------------
 autoimage(lon, lat, tasmax, outer.title = "tasmax for 5 days",
           mtext.args = list(col = "blue", cex = 2))
 
-## ---- fig.width = 4, fig.height = 4--------------------------------------
+## ---- fig.width = 4, fig.height = 4-------------------------------------------
 par(cex.axis = 0.5, cex.lab = 0.5, mgp = c(1.5, 0.5, 0),
     mar = c(2.1, 2.1, 2.1, 0.2), col.axis = "orange",
     col.main = "blue", family = "mono")

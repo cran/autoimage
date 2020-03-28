@@ -234,7 +234,6 @@ arg.check.autolayout <- function(size, legend, common.legend, outer, show,
   }
 }
 
-
 #' Add legend to projected image.
 #' 
 #' \code{autolegend} adds a color scale to the current device based on
@@ -328,7 +327,7 @@ autolegend <- function() {
   legend.mar <- .legend.mar()
   legend.scale.args <- .legend.scale.args()
   if (is.null(legend.scale.args$zlim)) {
-    stop("pimage must be called before autolegend")
+    stop("pimage or heat_ppoints must be called before autolegend")
   }
   legend.scale.args$horizontal <- .legend.horizontal()
   curmar <- par("mar")
@@ -447,4 +446,3 @@ autosize <- function(n) {
     stop("autosize only works for n <= 36.  user must choose size.")
   }
 }
-
