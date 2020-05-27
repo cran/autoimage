@@ -6,6 +6,24 @@ autopoints(co$longitude, co$latitude, co$Al,
 
 ## ---- fig.height=5, fig.width=8-----------------------------------------------
 autopoints(co$longitude, co$latitude, co[, c("Al", "Ca")], 
+       xlab = "lon", ylab = "lat", common.legend = FALSE,
+       main = c("Al", "Ca"))
+
+## ---- fig.height=5, fig.width=8-----------------------------------------------
+summary(co[, c("Al", "Ca")])
+autopoints(co$longitude, co$latitude, co[, c("Al", "Ca")], 
+       xlab = "lon", ylab = "lat", common.legend = FALSE,
+       main = c("Al", "Ca"), zlim = list(c(0, 10), c(0, 22)))
+
+## ---- fig.height=5, fig.width=8-----------------------------------------------
+autopoints(co$longitude, co$latitude, co[, c("Al", "Ca")], 
+       xlab = "lon", ylab = "lat", common.legend = FALSE,
+       main = c("Al", "Ca"), 
+       breaks = list(seq(0, 10, by = 2.5),
+                     c(0, 2, 4, 6, 8, 22)))
+
+## ---- fig.height=5, fig.width=8-----------------------------------------------
+autopoints(co$longitude, co$latitude, co[, c("Al", "Ca")], 
        xlab = "lon", ylab = "lat",
        proj = "bonne", parameters = 40,
        paxes.args = list(col = "lightgrey"),
@@ -85,10 +103,10 @@ data(co, package = "gear")
 # customize legend colors
 # add grey county borders
 # exclude longitude/latitude
-pimage(co$lon, co$lat, co$Al, map = "county", legend = "none",
+heat_ppoints(co$lon, co$lat, co$Al, map = "county", legend = "none",
        proj = "bonne", parameters = 39, 
        paxes.args = list(grid = FALSE),
-       col = cm.colors(6),
+       col = cm.colors(5),
        lines.args = list(col = "grey"),
        xlab = "lon", ylab = "lat")
 # add colorado city points to image

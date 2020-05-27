@@ -130,6 +130,16 @@ lines_args_setup = function(arglist, proj) {
       stop("The x and y vectors in lines must have he same length")
     }
   }
+  # clip lines beyond xlim and ylim if !is.null(arglist_lines)
+  if (!is.null(arglist_lines)) {
+    arglist_lines$x[arglist_lines$x < arglist$xlim[1]] <- NA
+    arglist_lines$x[arglist_lines$x > arglist$xlim[2]] <- NA
+    if (proj == "mercator" & arglist$xlim[2] > 179.35) {
+      arglist_lines$x[arglist_lines$x > 179.35] <- NA
+    }
+    arglist_lines$y[arglist_lines$y < arglist$ylim[1]] <- NA
+    arglist_lines$y[arglist_lines$y > arglist$ylim[2]] <- NA
+  }
   lines.args <- arglist$lines.args
   lines.args$proj <- proj
   lines.args$x <- arglist_lines
@@ -232,7 +242,6 @@ axes_setup = function(arglist) {
   return(axes)
 }
 
-
 #' Clear arglist of information no longer needed
 #'
 #' @param arglist List of arguments
@@ -248,7 +257,9 @@ arglist_clean = function(arglist, image = FALSE) {
   arglist$axis.args <- NULL
   # will plot axes manually, if necessary
   arglist$axes <- FALSE
-  # 
+  arglist$legend.mar <- NULL
+  arglist$interp.args <- NULL
+  arglist$legend.axis.args <- NULL
   # remove zlim and breaks since not relevant for plot
   if (!image) {
     arglist$zlim <- NULL
@@ -256,3 +267,235 @@ arglist_clean = function(arglist, image = FALSE) {
   }
   return(arglist)
 }
+
+#' Setup zlim and breaks (try to make pretty based on n) for
+#' a single plot
+#'
+#' @param arglist Argument list
+#' @param n Desired number of color partitions
+#' @param ranze_z Range of z
+#' @noRd
+zlim_breaks_setup = function(zlim, breaks, n, range_z, col) {
+  if (is.null(zlim) & is.null(breaks)) {
+    breaks <- pretty(range_z, n = n)
+    if (!is.null(col)) {
+      if (length(breaks) != n + 1) {
+        warning("Number of partitions provided by pretty function does not match length(col). Automatically adjusting axis tick labels. User may need to manually specify breaks to improve appearance.")
+        breaks <- seq(range_z[1], range_z[2], length = n + 1)
+      }
+    }
+    zlim <- range(breaks, na.rm = TRUE)
+  } else if (is.null(zlim) & !is.null(breaks)) {
+    if (is.list(breaks)) {
+      stop("breaks should not be a list when common.legend = TRUE")
+    }
+    zlim <- range(breaks, na.rm = TRUE)
+  } else if (!is.null(zlim) & is.null(breaks)) {
+    if (is.list(zlim)) {
+      stop("zlim should not be a list when common.legend = TRUE")
+    }
+    if (length(zlim) != 2) {
+      stop("zlim should specify the minimum and maximum values of z")
+    }
+    if (!is.numeric(zlim)) {
+      stop("zlim must consist of numeric values")
+    }
+    breaks <- seq(zlim[1], zlim[2], length = n + 1)
+  } else if (!is.null(zlim) & !is.null(breaks)) {
+    if (min(zlim) != min(breaks)) {
+      stop("min of breaks and zlim should match if both are specified")
+    }
+    if (max(zlim) != max(breaks)) {
+      stop("max of breaks and zlim should match if both are specified")
+    }
+  }
+  return(list(zlim = zlim, breaks = breaks))
+}
+
+#' Setup zlim and breaks (try to make pretty based on n) for
+#' a multiple plots
+#'
+#' @param arglist Argument list
+#' @param n Desired number of color partitions
+#' @param ranze_z Range of z
+#' @noRd
+auto_zlim_breaks_setup = function(arglist, n, z, common.legend) {
+  if (common.legend) {
+    zlim_breaks <- zlim_breaks_setup(arglist$zlim, arglist$breaks, n, range(z, na.rm = TRUE), arglist$col)
+    arglist$zlim = rep(list(zlim_breaks$zlim), ncol(z))
+    arglist$breaks = rep(list(zlim_breaks$breaks), ncol(z))
+  } else {
+    arglist_zlim <- arg_check_zlim(arglist$zlim, ncol(z))
+    arglist_breaks <- arg_check_breaks(arglist$breaks, ncol(z))
+    for (i in seq_len(ncol(z))) {
+      zlim_breaks <- zlim_breaks_setup(arglist_zlim[[i]],
+                                       arglist_breaks[[i]],
+                                       n,
+                                       range(z[,i], na.rm = TRUE),
+                                       arglist$col)
+      arglist_zlim[[i]] <- zlim_breaks$zlim
+      arglist_breaks[[i]] <- zlim_breaks$breaks
+    }
+    arglist$zlim <- arglist_zlim
+    arglist$breaks <- arglist_breaks
+  }
+  return(arglist)
+}
+
+#' Check zlim argument for autopoints
+#'
+#' @param arglist_zlim arglist$zlim
+#' @param nz Number of columns of z
+#' @noRd
+arg_check_zlim = function(arglist_zlim, nz) {
+  if (is.list(arglist_zlim)) {
+    if (length(arglist_zlim) != nz) {
+      stop("length(zlim) != ncol(z)")
+    }
+  } else {
+    arglist_zlim = rep(list(arglist_zlim), nz)
+  }
+  return(arglist_zlim)
+}
+
+#' Check breaks argument for autopoints
+#'
+#' @param arglist_breaks arglist$breaks
+#' @param nz Number of columns of z
+#' @noRd
+arg_check_breaks = function(arglist_breaks, nz) {
+  if (is.list(arglist_breaks)) {
+    if (length(arglist_breaks) != nz) {
+      stop("length(breaks) != ncol(z)")
+    }
+  } else {
+    arglist_breaks = rep(list(arglist_breaks), nz)
+  }
+  return(arglist_breaks)
+}
+
+
+#' Setup col for pimage
+#'
+#' @param arglist List of additional arguments
+#' @return Updated arglist
+#' @noRd
+pimage_col_arglist_setup <- function(arglist) {
+  if (is.null(arglist$col) & is.null(arglist$breaks)) {
+    arglist$col <- viridisLite::viridis(64)
+  } else if (is.null(arglist$col) & !is.null(arglist$breaks)) {
+    nb <- length(arglist$breaks)
+    arglist$col <- viridisLite::viridis(nb - 1)
+  }
+  return(arglist)
+}
+
+#' Setup legend.scale.args
+#'
+#' @param arglist List of arguments
+#' @return List of legend.scale.args
+#' @noRd
+legend_scale_args_setup <- function(arglist) {
+  legend.scale.args <- list()
+  legend.scale.args$zlim <- arglist$zlim
+  legend.scale.args$col <- arglist$col
+  legend.scale.args$breaks <- arglist$breaks
+  legend.scale.args$axis.args <- arglist$legend.axis.args
+  return(legend.scale.args)
+}
+
+#' Interpolate z for pimage, if necessary
+#'
+#' @param x vector of x coordinates
+#' @param y vector of y coordinates
+#' @param z vector of z values
+#' @param arglist List of additional arguments
+#' @return List of interpolated x, y, and z
+#' @noRd
+interp_setup <- function(x, y, z, arglist) {
+  # setup interpolation arguments
+  interp.args <- arglist$interp.args
+  # remove non-graphical arguments, if provided
+  arglist$interp.args <- NULL
+  if (is.null(interp.args)) {
+    interp.args <- list()
+  }
+  
+  
+  interp.args$xyz <- cbind(x, y, z)
+  
+  # convert from old format
+  if (!is.null(interp.args$xo)) {
+    warning("MBA::mba.surf is now used for prediction on a grid instead of the akima::interp function.  Attempting to automatically translate arguments.  Results may slightly differ from previous versions of the package.")
+    interp.args$no.X <- length(interp.args$xo)
+    interp.args$xo <- NULL
+  }
+  if (!is.null(interp.args$yo)) {
+    warning("MBA::mba.surf is now used for prediction on a grid instead of the akima::interp function.  Attempting to automatically translate arguments.  Results may slightly differ from previous versions of the package.")
+    interp.args$no.Y <- length(interp.args$yo)
+    interp.args$yo <- NULL
+  }
+  if (!is.null(interp.args$linear)) {
+    warning("MBA::mba.surf is now used for prediction on a grid instead of the akima::interp function.  Attempting to automatically translate arguments.  Results may slightly differ from previous versions of the package.")
+    interp.args$linear <- NULL
+  }
+  if (!is.null(interp.args$extrap)) {
+    warning("MBA::mba.surf is now used for prediction on a grid instead of the akima::interp function.  Attempting to automatically translate arguments.  Results may slightly differ from previous versions of the package.")
+    interp.args$extend <- interp.args$extrap
+    interp.args$extrap <- NULL
+  }
+  if (!is.null(interp.args$nx)) {
+    warning("MBA::mba.surf is now used for prediction on a grid instead of the akima::interp function.  Attempting to automatically translate arguments.  Results may slightly differ from previous versions of the package.")
+    interp.args$no.X <- interp.args$nx
+    interp.args$nx <- NULL
+  }
+  if (!is.null(interp.args$ny)) {
+    warning("MBA::mba.surf is now used for prediction on a grid instead of the akima::interp function.  Attempting to automatically translate arguments.  Results may slightly differ from previous versions of the package.")
+    interp.args$no.Y <- interp.args$ny
+    interp.args$ny <- NULL
+  }
+  
+  if (is.null(interp.args$no.X)) {
+    interp.args$no.X <- 40
+  }
+  if (is.null(interp.args$no.Y)) {
+    interp.args$no.Y <- 40
+  }
+  interpf <- MBA::mba.surf
+  ixyz <- do.call(interpf, interp.args)
+  x <- ixyz$xyz.est$x
+  y <- ixyz$xyz.est$y
+  z <- ixyz$xyz.est$z
+  
+  # bug fix for old version of MBA package
+  if (length(x) != length(y)) {
+    if (length(x) != nrow(z)) {
+      z <- matrix(c(z), nrow = ncol(z), ncol = nrow(z))    
+    }
+  }
+  return(list(x = x, y = y, z = z))
+}
+
+#' Setup x, y, and zlim in arglist
+#' @param x vector or matrix of x coordinates
+#' @param y vector or matrix of y coordinates
+#' @param z vector or matrix of z coordinates
+#' @param arglist List of additional arguments
+#' @return Updated arglist
+#' @noRd
+xyzlim_arglist_setup <- function(x, y, z, arglist) {
+  # set limits  
+  if (is.null(arglist$xlim)) {
+    arglist$xlim <- range(x, na.rm = TRUE)
+  }
+  if (is.null(arglist$ylim)) {
+    arglist$ylim <- range(y, na.rm = TRUE)
+  }
+  if (is.null(arglist$zlim)) {
+    arglist$zlim <- range(z, na.rm = TRUE)
+  }
+  return(arglist)
+}
+
+
+

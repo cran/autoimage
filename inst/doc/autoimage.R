@@ -46,6 +46,12 @@ autoimage(lon, lat, tasmax[,,1:3], size = c(1, 3))
 ## ---- fig.height = 6, fig.width = 7-------------------------------------------
 autoimage(lon, lat, tasmax, outer.title = "tasmax for 5 days")
 
+## ---- fig.height = 5, fig.width = 4-------------------------------------------
+autoimage(x = lon, y = lat, z = tasmax[,,1], 
+          map = "world",
+          xlab = "longitude", ylab = "latitude",
+          proj = "mercator", axes = FALSE)
+
 ## -----------------------------------------------------------------------------
 autolayout(c(2, 3), legend = "v")
 
@@ -133,7 +139,7 @@ pimage(lon, lat, tasmax[,,1], proj = "bonne", parameters = 40)
 
 ## ---- fig.height = 4, fig.width = 5-------------------------------------------
 pimage(lon, lat, tasmax[,,1], proj = "bonne", parameters = 40,
-       axis.args = list(yat = seq(0, 70, by = 10), 
+       axis.args = list(yat = seq(-10, 70, by = 10), 
                         xat = seq(-220, 20, by = 20),
                         col.axis = "darkgrey", cex.axis = 0.9),
        paxes.args = list(col = "grey", lty = 2),

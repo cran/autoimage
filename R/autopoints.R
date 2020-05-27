@@ -1,11 +1,25 @@
 #' Automatic facetting of multiple projected scatterplots
 #'
-#' \code{autospoints} plots a sequence of scatterplots (with possibly 
+#' \code{autopoints} plots a sequence of scatterplots (with possibly 
 #' projected coordinates) while also automatically plotting a 
 #' color scale matching the image colors to the values of \code{z}.  
 #' Many options are available for customization. See the Examples 
 #' below or execute \code{vignette("autopoints")} to better
 #' understand the possibilities.
+#' 
+#' The \code{n} argument specifies the desired number of color
+#' partitions, but may not be exact. This is used to create
+#' "pretty" color scale tick labels using the
+#' \code{\link[base]{pretty}} function.
+#' If \code{zlim} or \code{breaks} are provided, then the 
+#' \code{\link[base]{pretty}} function is not used to determine
+#' the color scale tick lables, and the user may need to
+#' manually specify \code{breaks} to get the color scale to
+#' have "pretty" tick labels. If \code{col} is specified,
+#' then \code{n} is set to \code{length(col)}, but the 
+#' functions otherwise works the same (i.e., pretty tick
+#' labels are not automatic if \code{zlim} or \code{breaks}
+#' are specified.
 #' 
 #' The \code{\link[mapproj]{mapproject}} function is used to project 
 #' the \code{x} and \code{y} coordinates when \code{proj != "none"}.
@@ -17,14 +31,17 @@
 #' be used to add a title to each successive scatterplot.  
 #' See the Examples.
 #'
-#' Additionally, if \code{common.legend = FALSE}, then separate limits 
-#' for the z-axis of each image can be provided as a list.  
+#' Additionally, if \code{common.legend = FALSE}, then separate 
+#' z limits and breaks for the z-axis of each image can be provided as a list.  
 #' Specifically, if \code{ncol(z) == k}, then \code{zlim} should 
 #' be a list of length \code{k}, and each element of the list should 
 #' be a 2-dimensional vector providing the lower and upper limit, 
-#' respectively, of the legend for each image.  Alternatively, if 
-#' \code{zlim} is a list of length \code{k}, then \code{common.legend}
-#' is set to \code{FALSE}. 
+#' respectively, of the legend for each image. Similarly,
+#' the \code{breaks} argument should be a list of length \code{k},
+#' and each element of the list should be a vector specifying
+#' the breaks for the color scale for each plot. Note that
+#' the length of each element of breaks should be 1 greater
+#' then the number of colors in the color scale.
 #' 
 #' The range of \code{zlim} is cut into \eqn{n} partitions, 
 #' where \code{n} is the length of \code{col}.
@@ -130,7 +147,7 @@ autopoints <- function(x, y, z, legend = "horizontal",
                        proj = "none", parameters,
                        orientation, common.legend = TRUE,
                        map = "none", size, lratio, 
-                       outer.title, ...) {
+                       outer.title, n = 5, ...) {
   # obtain elements of ...
   arglist <- list(...)
   mtext.args <- arglist$mtext.args
@@ -149,7 +166,8 @@ autopoints <- function(x, y, z, legend = "horizontal",
                                    arglist = arglist,
                                    verbose = verbose,
                                    common.legend = common.legend,
-                                   legend = legend)
+                                   legend = legend,
+                                   n = n)
   ng <- length(xyz.list)  # number of grids
   # additional argument checking
   if (missing(size)) 
@@ -161,11 +179,7 @@ autopoints <- function(x, y, z, legend = "horizontal",
       lratio = 0.1 + 0.1 * size[2]
     }
   }
-  # change common.legend if zlim is a list
-  if (!is.null(arglist$zlim)) {
-    if (is.list(arglist$zlim)) 
-      common.legend <- FALSE
-  }
+
   # check other argument, specify outer arguments
   outer.args <- arg.check.autoimage(common.legend, size, outer.title, ng, mtext.args)
   
@@ -212,7 +226,8 @@ autopoints <- function(x, y, z, legend = "horizontal",
 # sorts out x, y, and z for autoimage function
 autopoints_xyz_setup <- function(x, y, z, tx, ty, arglist,
                                  verbose, common.legend = FALSE,
-                                 legend = "none") {
+                                 legend = "none", 
+                                 n) {
   arglist$mtext.args <- NULL
   
   # sanity checiking
@@ -246,23 +261,11 @@ autopoints_xyz_setup <- function(x, y, z, tx, ty, arglist,
     arglist$ylim <- range(y, na.rm = TRUE)
   }
   
-  # set plotting options
-  if (common.legend) {
-    if (is.null(arglist$zlim)) {
-      arglist$zlim <- range(z, na.rm = TRUE)
-    } else {
-      if (is.list(arglist$zlim)) {
-        stop("zlim should not be a list when common.legend = TRUE")
-      }
-      if (length(arglist$zlim) != 2) {
-        stop("zlim should specify the minimum and maximum values of z")
-      }
-    }
+  if (!is.null(arglist$col)) {
+    n <- length(arglist$col)
   }
-  
-  # set legend margins
-  if (is.null(arglist$legend.mar) & legend != "none") {
-    arglist$legend.mar <- automar(legend)
+  if (length(n) != 1 | !is.numeric(n) | n <= 1) {
+    stop("n should be a positive integer")
   }
   
   # check x, y, z
@@ -299,19 +302,32 @@ autopoints_xyz_setup <- function(x, y, z, tx, ty, arglist,
     stop("nrow(z) must equal length(x) when z is matrix-like")
   }
 
+  # set plotting options for zlim, breaks
+  arglist <- auto_zlim_breaks_setup(arglist, n, z, common.legend)
+
+  # set legend margins
+  if (is.null(arglist$legend.mar) & legend != "none") {
+    arglist$legend.mar <- automar(legend)
+  }
+  
+  
   # set main and zlim
   nz = ncol(z)
   main <- auto_main_setup(arglist_main = arglist$main, nz)
-  zlim <- autopoints_zlim_setup(arglist_zlim = arglist$zlim, z, common.legend)
+  zlim <- arglist$zlim
+  arglist$zlim <- NULL
+  breaks <- arglist$breaks
+  arglist$breaks <- NULL
 
   # construct list component for each column of z
   # column of z
   xyz.list <- vector("list", nz)
-  # replicate each set of information into list  
+  # replicate each set of information into list
   for (i in seq_along(xyz.list)) {
     arglist0 <- arglist
     arglist0$main <- main[i]
     arglist0$zlim <- zlim[[i]]
+    arglist0$breaks <- breaks[[i]]
     arglist0$x <- x
     arglist0$y <- y
     arglist0$z <- z[, i]

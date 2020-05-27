@@ -131,6 +131,19 @@ We add a common title to the NARCCAP data.
 autoimage(lon, lat, tasmax, outer.title = "tasmax for 5 days")
 ```
 
+The mercator projection can sometimes be problematic for various
+reasons, especially with the world map as horizontal lines appear
+across the plot area. We have attempted to solve this issue
+by clipping x and y coordinates that are outside the range
+of `xlim` and `ylim`. 
+
+```{r, fig.height = 5, fig.width = 4}
+autoimage(x = lon, y = lat, z = tasmax[,,1], 
+          map = "world",
+          xlab = "longitude", ylab = "latitude",
+          proj = "mercator", axes = FALSE)
+```
+
 ### Richer plots using `autolayout` and `autolegend`
 
 Suppose we want to add custom features to a sequences of images, with each image receiving different features.  One can create a richer sequence of images using the `autolayout` and `autolegend` functions.
@@ -275,7 +288,7 @@ The grid lines do not extend nearly far enough.  There are only two tick marks o
 
 ```{r, fig.height = 4, fig.width = 5}
 pimage(lon, lat, tasmax[,,1], proj = "bonne", parameters = 40,
-       axis.args = list(yat = seq(0, 70, by = 10), 
+       axis.args = list(yat = seq(-10, 70, by = 10), 
                         xat = seq(-220, 20, by = 20),
                         col.axis = "darkgrey", cex.axis = 0.9),
        paxes.args = list(col = "grey", lty = 2),

@@ -88,30 +88,72 @@ paxes <- function(proj, xlim, ylim, xaxp, yaxp, grid = TRUE, axis.args,
     axis.args$side = 2
     axis.args$at <- yat
     do.call(f, axis.args)
-    # graphics::axis(1, at = xat) graphics::axis(2, at = yat)
   } else {
+    
+    if ((min(xat) < -180 | max(xat) > 180) & proj == "mercator") {
+      warning("The x axis tick positions are not between -180 and 180, which creates problems with the mercator projection. Attempting to automatically correct the issue. The user may need to specify xaxp, or for more control, the xat argument of the paxes.args list.")
+      xat = seq(pmax(-180, min(xat), na.rm = TRUE),
+                pmin(180, max(xat), na.rm = TRUE),
+                length.out = 5)
+    }
+    if ((min(yat) < -90 | max(yat) > 90) & proj == "mercator") {
+      warning("The y axis tick positions are not between -90 and 90, which creates problems with the mercator projection. Attempting to automatically correct the issue. The user may need to specify yaxp, or for more control, the yat argument of the paxes.args list.")
+      yat = seq(pmax(-90, min(yat), na.rm = TRUE),
+                pmin(90, max(yat), na.rm = TRUE),
+                length.out = 5)
+    }
+    
+    # deal with mercator problem
+    adapt = FALSE # adapt labels
+    olab = NULL
+    wswitch = NULL
+    if (max(xat) > 179.35 & proj == "mercator") {
+      warning("There are issues with projecting x coordinates greater than 179.35 with the mercator projection. Attempting a solution.")
+      adapt = TRUE
+      wswitch = which(xat > 179.35)
+      olab = xat[wswitch]
+      xat[wswitch] = 179.35
+    }
+      
     # convert axis coordinates add grid lines, if desired
     xe <- numeric(length(xat))
     for (i in seq_along(xat)) {
       xl <- cbind(xat[i], seq(min(yat), max(yat), len = 25))
       pxl <- mapproj::mapproject(xl[, 1], xl[, 2])
       if (grid) {
-        graphics::lines(pxl$x, pxl$y, ...)
-        # lines(pxl$x, pxl$y)
+        graphics::lines(pxl$x, pxl$y)
       }
       # need to interpolate to edge of plot
-      xe[i] <- stats::spline(pxl$y, pxl$x, xout = par("usr")[3])$y
+      # na.omit to deal with case of NAs
+      xei <- try(stats::spline(stats::na.omit(pxl$y), stats::na.omit(pxl$x), xout = par("usr")[3])$y,
+                 silent = TRUE)
+      if (class(xei) == "try-error") {
+        xe[i] <- NA
+      } else {
+        xe[i] <- xei
+      }
     }
     ye <- numeric(length(yat))
     for (j in seq_along(yat)) {
       yl <- cbind(seq(min(xat), max(xat), len = 25), yat[j])
       pyl <- mapproj::mapproject(yl[, 1], yl[, 2])
       if (grid) {
-        graphics::lines(pyl$x, pyl$y, ...)
-        # lines(pyl$x, pyl$y)
+        graphics::lines(pyl$x, pyl$y)
       }
-      ye[j] <- stats::spline(pyl$x, pyl$y, xout = par("usr")[1])$y
+      # na.omit to deal with case of NAs
+      yej <- try(stats::spline(stats::na.omit(pyl$x), stats::na.omit(pyl$y), xout = par("usr")[1])$y,
+                 silent = TRUE) 
+      if (class(yej) == "try-error") {
+        ye[j] <- NA
+      } else {
+        ye[j] <- yej
+      }
     }
+    
+    if (adapt) {
+      xat[wswitch] = olab
+    } 
+
     axis.args$side = 1
     axis.args$at <- xe
     axis.args$labels <- xat
@@ -120,8 +162,6 @@ paxes <- function(proj, xlim, ylim, xaxp, yaxp, grid = TRUE, axis.args,
     axis.args$at <- ye
     axis.args$labels <- yat
     do.call(f, axis.args)
-    # graphics::axis(1, at = xe, labels = xat) graphics::axis(2, at = ye,
-    # labels = yat)
   }
   # add box to make things look normal
   box()

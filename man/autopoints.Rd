@@ -17,6 +17,7 @@ autopoints(
   size,
   lratio,
   outer.title,
+  n = 5,
   ...
 )
 }
@@ -77,12 +78,15 @@ the image.  Default is \code{lratio = 0.2}.}
 
 \item{outer.title}{A title related to all of the images that is plotted in the outer margin of the figure.}
 
+\item{n}{integer giving the \emph{desired} number of
+    intervals.  Non-integer values are rounded down.}
+
 \item{...}{Additional arguments passed to the 
 \code{\link[graphics]{plot}}. e.g., \code{xlab}, \code{ylab}, 
 \code{xlim}, \code{ylim}, \code{zlim}, etc.}
 }
 \description{
-\code{autospoints} plots a sequence of scatterplots (with possibly 
+\code{autopoints} plots a sequence of scatterplots (with possibly 
 projected coordinates) while also automatically plotting a 
 color scale matching the image colors to the values of \code{z}.  
 Many options are available for customization. See the Examples 
@@ -90,6 +94,20 @@ below or execute \code{vignette("autopoints")} to better
 understand the possibilities.
 }
 \details{
+The \code{n} argument specifies the desired number of color
+partitions, but may not be exact. This is used to create
+"pretty" color scale tick labels using the
+\code{\link[base]{pretty}} function.
+If \code{zlim} or \code{breaks} are provided, then the 
+\code{\link[base]{pretty}} function is not used to determine
+the color scale tick lables, and the user may need to
+manually specify \code{breaks} to get the color scale to
+have "pretty" tick labels. If \code{col} is specified,
+then \code{n} is set to \code{length(col)}, but the 
+functions otherwise works the same (i.e., pretty tick
+labels are not automatic if \code{zlim} or \code{breaks}
+are specified.
+
 The \code{\link[mapproj]{mapproject}} function is used to project 
 the \code{x} and \code{y} coordinates when \code{proj != "none"}.
 
@@ -100,14 +118,17 @@ If multiple scatterplots are to be plotted (i.e., if
 be used to add a title to each successive scatterplot.  
 See the Examples.
 
-Additionally, if \code{common.legend = FALSE}, then separate limits 
-for the z-axis of each image can be provided as a list.  
+Additionally, if \code{common.legend = FALSE}, then separate 
+z limits and breaks for the z-axis of each image can be provided as a list.  
 Specifically, if \code{ncol(z) == k}, then \code{zlim} should 
 be a list of length \code{k}, and each element of the list should 
 be a 2-dimensional vector providing the lower and upper limit, 
-respectively, of the legend for each image.  Alternatively, if 
-\code{zlim} is a list of length \code{k}, then \code{common.legend}
-is set to \code{FALSE}. 
+respectively, of the legend for each image. Similarly,
+the \code{breaks} argument should be a list of length \code{k},
+and each element of the list should be a vector specifying
+the breaks for the color scale for each plot. Note that
+the length of each element of breaks should be 1 greater
+then the number of colors in the color scale.
 
 The range of \code{zlim} is cut into \eqn{n} partitions, 
 where \code{n} is the length of \code{col}.
