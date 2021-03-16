@@ -32,6 +32,7 @@ ppoints <- function(x, y = NULL, type = "p", proj, ...) {
     object$x <- projxy$x
     object$y <- projxy$y
   }
+  
   f <- graphics::points
   do.call(f, object)
 }

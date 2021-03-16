@@ -375,8 +375,23 @@ pimage.setup <- function(xyz, legend = "none", proj = "none", parameters = NULL,
     }
     x <- matrix(projectxy$x, nrow = nrow(x))
     y <- matrix(projectxy$y, nrow = nrow(y))
-    arglist$xlim <- range(x[which.in], na.rm = TRUE)
-    arglist$ylim <- range(y[which.in], na.rm = TRUE)
+    
+    # arglist$xlim <- range(x[which.in], na.rm = TRUE)
+    # arglist$ylim <- range(y[which.in], na.rm = TRUE)
+    
+    # project limits
+    sx = seq(arglist$xlim[1], arglist$xlim[2], len = 100)
+    sy = seq(arglist$ylim[1], arglist$ylim[2], len = 100)
+    # need to create grid of possibilities since grids are weird
+    sg = expand.grid(sx, sy)
+    # project grid
+    project_lim <- mapproj::mapproject(sg[,1], sg[,2],
+                                       projection = proj, 
+                                       parameters = parameters,
+                                       orientation = orientation)
+    # take limits
+    arglist$xlim <- range(project_lim$x, na.rm = TRUE)
+    arglist$ylim <- range(project_lim$y, na.rm = TRUE)
   }
   
   # is the grid a regular grid
@@ -458,7 +473,8 @@ pimage.xyz.setup <- function(x, y, z, tx, ty, arglist) {
     y <- x$y
     x <- x$x
   }
-  if (!is.matrix(z)) {
+  # if (!is.matrix(z) | !is.data.frame(z)) {
+  if (is.null(dim(z))) {
     if (is.null(x) | is.null(y)) {
       stop("x and y must be specified when z is not a matrix")
     }
@@ -466,6 +482,10 @@ pimage.xyz.setup <- function(x, y, z, tx, ty, arglist) {
       stop("x and y do not have the same length and/or dimensions")
     }
   } else {
+    if (length(dim(z)) != 2) {
+      stop("If z is a matrix-like object, (i.e., dim(z) != NULL), then it must be two-dimensional")
+    }
+    z <- as.matrix(z) # convert z to a matrix, just in case
     if (is.null(x)) 
       x <- seq.int(0, 1, length.out = nrow(z))
     if (is.null(y)) 
